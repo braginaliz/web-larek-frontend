@@ -17,6 +17,7 @@ class ProductModel {
     getProducts() {
         return this.products;
     }
+    
 }
 
 export default ProductModel;
