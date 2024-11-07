@@ -1,6 +1,6 @@
-import { IEvents } from "./base/events";
+import { IEvents } from "../base/events";
 
-export class HTMLAction<T> {
+export class MainPresenter<T> {
     constructor(protected readonly container: HTMLElement) {}
 
     toggleClass(className: string): void {
@@ -28,7 +28,7 @@ export class HTMLAction<T> {
     }
 }
 
-export class View<T> extends HTMLAction<T> {
+export class View<T> extends MainPresenter<T> {
     constructor(protected readonly events: IEvents, container: HTMLElement) {
         super(container);
     }
