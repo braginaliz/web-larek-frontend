@@ -1,6 +1,55 @@
 import { View } from "./MainPresenter";
-import { EventEmitter } from "../../components/base/events";
+import { EventEmitter, IEvents } from "../../components/base/events";
 import { ensureElement } from "../../utils/utils";
+
+interface ModalData {
+    content: HTMLElement;
+}
+
+export class Modal extends View<ModalData> {
+    private closeButton: HTMLButtonElement;
+    private content: HTMLElement;
+
+    constructor(events: IEvents, container: HTMLElement) {
+        super(events, container);
+
+        this.closeButton = ensureElement<HTMLButtonElement>('.modal__close', container);
+        this.content = ensureElement<HTMLElement>('.modal__content', container);
+
+        this.initializeEventListeners();
+    }
+
+    private initializeEventListeners(): void {
+        this.closeButton.addEventListener('click', () => this.close());
+        this.container.addEventListener('click', () => this.close());
+        this.content.addEventListener('click', (event) => event.stopPropagation());
+    }
+
+    set contentValue(value: HTMLElement) {
+        this.content.replaceChildren(value);  
+    }
+
+    open(): void {
+        this.container.classList.add('modal_active');
+        this.events.emit('modal:open');
+    }
+
+    close(): void {
+        this.container.classList.remove('modal_active');
+        this.events.emit('modal:close');
+        this.clearContent(); 
+    }
+    
+    private clearContent(): void {
+        this.content.innerHTML = ''; 
+    }
+
+    render(data: ModalData): HTMLElement {
+        this.contentValue = data.content;  
+        this.open(); 
+        return this.container;
+    }
+}
 
 interface FormState {
     valid: boolean;
