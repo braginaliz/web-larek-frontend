@@ -1,12 +1,14 @@
-import { OrderInput, OrderOutcome } from "../../types";
+import { OrderDetails, OrderInput} from "../../types";
 import { IEvents } from "../base/events";
 
 class OrderModel {
-    private order: OrderInput = {
-        paymentMethod: 'card',
-        customerEmail: '',
-        customerPhone: '',
-        shippingAddress: '',
+    private order: OrderDetails = {
+        payment: 'card',
+        email: '',
+        phone: '',
+        address: '',
+        total: 0,
+        items: []
     };
     private events: IEvents;
 
@@ -17,24 +19,24 @@ class OrderModel {
     setOrderDetails(details: Partial<OrderInput>) {
         this.order = { ...this.order, ...details };
 
-        if (this.order.paymentMethod && this.validateOrder()) {
+        if (this.order.payment && this.validateOrder()) {
             this.events.emit('order:ready', this.order);
         }
     }
 
     validateOrder() {
         const errors: Record<string, string> = {};
-        if (!this.order.paymentMethod) {
-            errors.paymentMethod = 'Необходимо выбрать способ оплаты';
+        if (!this.order.payment) {
+            errors.payment = 'Необходимо выбрать способ оплаты';
         }
-        if (!this.order.customerEmail) {
-            errors.customerEmail = 'Необходимо указать email';
+        if (!this.order.email) {
+            errors.email = 'Необходимо указать email';
         }
-        if (!this.order.customerPhone) {
-            errors.customerPhone = 'Необходимо указать телефон';
+        if (!this.order.phone) {
+            errors.phone = 'Необходимо указать телефон';
         }
-        if (!this.order.shippingAddress) {
-            errors.shippingAddress = 'Необходимо указать адрес';
+        if (!this.order.address) {
+            errors.address = 'Необходимо указать адрес';
         }
         this.events.emit('formErrors:change', errors);
         return Object.keys(errors).length === 0;

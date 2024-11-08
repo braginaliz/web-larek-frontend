@@ -2,7 +2,7 @@ import { PaymentTypes, ProductDetails } from "../../types";
 import { IEvents } from "../base/events";
 
 class ProductModel {
-    private products: ProductDetails[] = [];
+    private items: ProductDetails[] = [];
     private events: IEvents;
 
     constructor(events: IEvents) {
@@ -10,12 +10,12 @@ class ProductModel {
     }
 
     setProducts(items: ProductDetails[]) {
-        this.products = items;
-        this.events.emit('products:change', this.products);
+        this.items = items;
+        this.events.emit('items:change', this.items);
     }
 
     getProducts() {
-        return this.products;
+        return this.items;
     }
     
 }
