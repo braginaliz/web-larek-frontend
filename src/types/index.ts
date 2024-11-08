@@ -11,12 +11,12 @@ export interface ProductDetails {
 }
 
 export interface OrderDetails {
-    paymentMethod: PaymentTypes; // способ оплаты
-    customerEmail: string;       // email клиента
-    customerPhone: string;       // телефон клиента
-    shippingAddress: string;     // адрес доставки
-    totalAmount: number;         // общая сумма заказа
-    orderedItems: string[];      // идентификаторы заказанных товаров
+    payment: PaymentTypes; // способ оплаты
+    email: string;       // email клиента
+    phone: string;       // телефон клиента
+    address: string;     // адрес доставки
+    total: number;         // общая сумма заказа
+    items: string[];      // идентификаторы заказанных товаров
 }
 
 export interface ShoppingBasket {
@@ -24,10 +24,9 @@ export interface ShoppingBasket {
     totalPrice: number;          // общая стоимость всех товаров
 }
 
-export type OrderInput = Omit<OrderDetails, 'totalAmount' | 'orderedItems'>;
+export type OrderInput = Omit<OrderDetails, 'total' | 'items'>;
 
 export interface OrderOutcome {
-    orderId: string;             // идентификатор заказа
-    finalAmount: number; 
-    paymentMethod: PaymentTypes; // итоговая сумма
+    id: string;             // идентификатор заказа
+    total: number; 
 }
