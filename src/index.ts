@@ -153,3 +153,11 @@ events.on('preview:change', (item: ProductDetails) => {
 events.on('modal:close', () => {
   page.locked = false;
 });
+
+api.getAllProducts()
+    .then((res: ProductDetails[]) => {
+        productModel.setProducts(res);
+    })
+    .catch(err => {
+        console.error(err);
+    });
