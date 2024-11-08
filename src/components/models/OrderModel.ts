@@ -1,4 +1,5 @@
 import { OrderDetails, OrderInput} from "../../types";
+import { PaymentTypes } from "../../types";
 import { IEvents } from "../base/events";
 
 class OrderModel {
@@ -40,6 +41,17 @@ class OrderModel {
         }
         this.events.emit('formErrors:change', errors);
         return Object.keys(errors).length === 0;
+    }
+
+    setPaymentTypes(method: PaymentTypes) {
+        this.order.payment = method;
+    }
+
+    setOrderField (field: keyof OrderInput, value: string){
+        if (field === 'payment') {
+            this.setPaymentTypes(value as PaymentTypes);
+
+        }
     }
 
     getOrder() {
