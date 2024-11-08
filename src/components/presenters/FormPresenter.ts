@@ -1,3 +1,4 @@
+// FormPresenter.ts
 import { View } from "./MainPresenter";
 import { EventEmitter } from "../base/events";
 import { ensureElement } from "../../utils/utils";
@@ -49,7 +50,7 @@ export class FormPresenter<T extends FormDeclare> extends View<T> {
 
     render(state: Partial<T> & Pick<FormDeclare, 'valid' | 'errors'>) {
         const { valid, errors, ...inputs } = state;
-        super.render({ valid, errors } as T); 
+        super.render({ valid, errors } as T);
         Object.assign(this, inputs);
         return this.container;
     }

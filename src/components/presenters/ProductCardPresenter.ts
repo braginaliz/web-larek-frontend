@@ -1,98 +1,97 @@
 // ProductCardPresenter.ts
-import { ensureElement } from "../../utils/utils";
-import { IEvents, EventEmitter } from "../base/events";
+import { MainPresenter } from "./MainPresenter"; 
+import { ProductDetails } from "../../types"; 
+import { bem, ensureElement } from "../../utils/utils";
 
-interface CardActions {
+interface ICardActions {
     onClick: (event: MouseEvent) => void;
 }
 
-export class ProductCardPresenter {
-    protected titleElement: HTMLElement;
-    protected imageElement: HTMLImageElement;
-    protected priceElement: HTMLElement;
-    protected categoryElement: HTMLElement;
-    protected buttonElement: HTMLButtonElement;
-    protected descriptionElement?: HTMLElement;
-    protected container: HTMLElement;
-    protected events: IEvents;
+type CardModifier = 'compact' | 'full';
 
-    constructor(container: HTMLElement, actions?: CardActions) {
-        this.events = new EventEmitter();
+export class ProductCardPresenter extends MainPresenter<ProductDetails> {
+    protected _title: HTMLElement;
+    protected _image?: HTMLImageElement;
+    protected _price: HTMLElement;
+    protected _description?: HTMLElement;
+    protected _category?: HTMLElement;
+    protected _button?: HTMLButtonElement;
 
-        this.container = container;
+    constructor(container: HTMLElement, actions?: ICardActions) { 
+        super(container);
 
-        this.titleElement = ensureElement<HTMLElement>('.card_title', container);
-        this.priceElement = ensureElement<HTMLElement>('.card_price', container);
-        this.categoryElement = ensureElement<HTMLElement>('.card_category', container);
-        this.buttonElement = ensureElement<HTMLButtonElement>('.card_button', container);
-        this.imageElement = ensureElement<HTMLImageElement>('.card_image', container);
-        this.descriptionElement = container.querySelector('.card_description') as HTMLElement;
+        this._title = ensureElement<HTMLElement>('.card_title', container);
+        this._price = ensureElement<HTMLElement>('.card_price', container);
+        this._category = container.querySelector<HTMLElement>('.card_category');
+        this._button = container.querySelector<HTMLButtonElement>('.card_button'); 
+        this._image = container.querySelector<HTMLImageElement>('.card_image'); 
+        this._description = container.querySelector<HTMLElement>('.card_description');
 
-        this.initializeEventListeners(actions);
-    }
-
-    private initializeEventListeners(actions?: CardActions): void {
         if (actions?.onClick) {
-            this.events.on('product:click', actions.onClick);
-            this.buttonElement.addEventListener('click', (event) => {
-                this.events.emit('product:click', event);
-            });
+            this._button 
+                ? this._button.addEventListener('click', actions.onClick) 
+                : container.addEventListener('click', actions.onClick);
         }
-
-        this.container.addEventListener('click', (event: MouseEvent) => {
-            if (event.target !== this.buttonElement) {
-                this.events.emit('product:click', event);
-            }
-        });
     }
 
-    private toggleClass(className: string): void {
-        this.container.classList.toggle(className);
+    toggle(modifier: CardModifier) {
+        this.toggleClass(bem('card', undefined, modifier).name);
+    }
+
+    set id(value: string) {
+        this.container.dataset.id = value;
     }
 
     get id(): string {
         return this.container.dataset.id || '';
     }
 
-    get title(): string {
-        return this.titleElement.textContent || '';
+    set title(value: string) {
+        this.updateText(this._title, value);
     }
 
-    set title(value: string) {
-        this.updateElementText(this.titleElement, value);
+    get title(): string {
+        return this._title.textContent ?? '';
     }
 
     set price(value: number) {
-        this.updateElementText(this.priceElement, `${value} символьный`);
-        this.buttonElement.disabled = value <= 0;
+        const priceText = value ? `${value} синaпсов` : 'Бесценно';
+        this.updateText(this._price, priceText);
+        this.toggleButtonState(value);
     }
 
     set category(value: string) {
-        this.updateElementText(this.categoryElement, value);
+        this.updateText(this._category, value);
     }
 
     set image(value: string) {
-        this.updateImageSrc(this.imageElement, value, this.title);
+        this.updateImage(this._image, value, this.title);
     }
 
     set description(value: string) {
-        if (this.descriptionElement) {
-            this.updateElementText(this.descriptionElement, value);
-        }
+        this.updateText(this._description, value);
     }
 
     set button(value: string) {
-        this.updateElementText(this.buttonElement, value);
+        this.updateText(this._button, value);
     }
 
-    private updateElementText(element: HTMLElement | null, value: string): void {
+    private updateText(element?: HTMLElement, text?: string) {
         if (element) {
-            element.textContent = value;
+            element.textContent = text ?? '';
         }
     }
 
-    private updateImageSrc(image: HTMLImageElement, src: string, altText: string): void {
-        image.src = src;
-        image.alt = altText;
+    private toggleButtonState(value: number) {
+        if (this._button) {
+            this._button.disabled = !value;
+        }
+    }
+
+    private updateImage(imageElement?: HTMLImageElement, src?: string, alt?: string) {
+        if (imageElement) {
+            imageElement.src = src ?? '';
+            imageElement.alt = alt ?? 'Изображение товара';
+        }
     }
 }

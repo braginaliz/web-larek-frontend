@@ -24,7 +24,10 @@ export interface ShoppingBasket {
     total: number;          // общая стоимость всех товаров
 }
 
-export type OrderInput = Omit<OrderDetails, 'total' | 'items'>;
+export type OrderInput = Omit<OrderDetails, 'total' | 'items'> & {
+    valid: boolean;              // свойство, указывающее на валидность данных
+    errors: string[];           // массив ошибок валидации
+};
 
 export interface OrderOutcome {
     id: string;             // идентификатор заказа
