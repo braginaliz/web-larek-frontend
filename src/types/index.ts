@@ -21,7 +21,7 @@ export interface OrderDetails {
 
 export interface ShoppingBasket {
     items: string[];             // список идентификаторов товаров
-    totalPrice: number;          // общая стоимость всех товаров
+    total: number;          // общая стоимость всех товаров
 }
 
 export type OrderInput = Omit<OrderDetails, 'total' | 'items'>;
