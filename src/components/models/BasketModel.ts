@@ -4,9 +4,12 @@ import { IEvents } from "../base/events";
 class BasketModel {
     private basket: ShoppingBasket = { items: [], total: 0 };
     private events: IEvents;
-
     constructor(events: IEvents) {
         this.events = events;
+    }
+
+    inBasket (item:ProductDetails) {
+        return this.basket.items.includes(item.id);
     }
 
     addToBasket(item: ProductDetails) {
@@ -15,11 +18,11 @@ class BasketModel {
         this.events.emit('basket:change', this.basket);
     }
 
-    removeFromBasket(id: string, price: number) {
-        const index = this.basket.items.indexOf(id);
+    removeFromBasket(item: ProductDetails) {
+        const index = this.basket.items.indexOf(item.id);
         if (index > -1) {
             this.basket.items.splice(index, 1);
-            this.basket.total -= price;
+            this.basket.total -= item.price;
             this.events.emit('basket:change', this.basket);
         }
     }

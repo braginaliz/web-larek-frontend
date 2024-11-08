@@ -1,5 +1,6 @@
 import { OrderDetails, OrderInput} from "../../types";
 import { PaymentTypes } from "../../types";
+import { ShoppingBasket } from "../../types";
 import { IEvents } from "../base/events";
 
 class OrderModel {
@@ -11,7 +12,9 @@ class OrderModel {
         total: 0,
         items: []
     };
+    private basket: ShoppingBasket = { items: [], total: 0 };
     private events: IEvents;
+    formErrors: Partial<Record<keyof OrderInput, string>> ={};
 
     constructor(events: IEvents) {
         this.events = events;
@@ -26,7 +29,7 @@ class OrderModel {
     }
 
     validateOrder() {
-        const errors: Record<string, string> = {};
+        const errors: typeof this.formErrors = {};
         if (!this.order.payment) {
             errors.payment = 'Необходимо выбрать способ оплаты';
         }
@@ -39,6 +42,7 @@ class OrderModel {
         if (!this.order.address) {
             errors.address = 'Необходимо указать адрес';
         }
+        this.formErrors = errors;
         this.events.emit('formErrors:change', errors);
         return Object.keys(errors).length === 0;
     }
@@ -51,6 +55,13 @@ class OrderModel {
         if (field === 'payment') {
             this.setPaymentTypes(value as PaymentTypes);
 
+        } else {
+            this.order[field] = value;
+        }
+        if (this.order.payment && this.validateOrder()) {
+            this.order.total = this.basket.total;
+            this.order.items = this.basket.items;
+            this.events.emit('order:ready', this.order);
         }
     }
 
