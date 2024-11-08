@@ -7,7 +7,7 @@ interface ModalDeclare {
     content: HTMLElement;
 }
 
-export class Modal extends View<ModalDeclare> {
+export class ModalPresenter extends View<ModalDeclare> {
     protected _closeButton: HTMLButtonElement;
     protected _content: HTMLElement;
 

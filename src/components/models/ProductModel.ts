@@ -1,3 +1,5 @@
+//ProductModel.ts
+
 import { ProductDetails } from "../../types";
 import { IEvents } from "../base/events";
 
