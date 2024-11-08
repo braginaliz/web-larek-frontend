@@ -24,12 +24,12 @@ export class MainPresenter<T> {
     }
 
     render(data?: T): HTMLElement {
-        if (data) {
-            Object.assign(this, data);
+         Object.assign(this as object, data ??{});
+         return this.container;
         }
-        return this.container;
+
     }
-}
+
 
 export class View<T> extends MainPresenter<T> {
     constructor(protected readonly events: IEvents, container: HTMLElement) {
