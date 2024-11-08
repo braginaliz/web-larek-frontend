@@ -1,127 +1,45 @@
 // ModalPresenter.ts
 import { View } from "./MainPresenter";
-import { EventEmitter, IEvents } from "../../components/base/events";
 import { ensureElement } from "../../utils/utils";
+import { IEvents } from "../base/events";
 
-interface ModalData {
+interface ModalDeclare {
     content: HTMLElement;
 }
 
-export class Modal extends View<ModalData> {
-    private closeButton: HTMLButtonElement;
-    private content: HTMLElement;
+export class Modal extends View<ModalDeclare> {
+    protected _closeButton: HTMLButtonElement;
+    protected _content: HTMLElement;
 
     constructor(events: IEvents, container: HTMLElement) {
         super(events, container);
+        this._closeButton = ensureElement<HTMLButtonElement>('.modal_close', container);
+        this._content = ensureElement<HTMLElement>('.modal_content', container);
 
-        this.closeButton = ensureElement<HTMLButtonElement>('.modal__close', container);
-        this.content = ensureElement<HTMLElement>('.modal__content', container);
-
-        this.initializeEventListeners();
+        this._closeButton.addEventListener('click', this.close.bind(this));
+        this.container.addEventListener('click', this.close.bind(this));
+        this._content.addEventListener('click', (event) => event.stopPropagation());
     }
 
-    private initializeEventListeners(): void {
-        this.closeButton.addEventListener('click', () => this.close());
-        this.container.addEventListener('click', () => this.close());
-        this.content.addEventListener('click', (event) => event.stopPropagation());
+    set content(value: HTMLElement) {
+        this._content.replaceChildren(value);
     }
 
-    set contentValue(value: HTMLElement) {
-        this.content.replaceChildren(value);
-    }
-
-    open(): void {
+    open() {
         this.container.classList.add('modal_active');
         this.events.emit('modal:open');
     }
 
-    close(): void {
+    close() {
         this.container.classList.remove('modal_active');
         this.events.emit('modal:close');
-        this.clearContent();
+        this._content.replaceChildren(null);  
     }
 
-    private clearContent(): void {
-        this.content.innerHTML = '';
-    }
-
-    render(data: ModalData): HTMLElement {
-        this.contentValue = data.content;
+    render(data: ModalDeclare): HTMLElement {
+        super.render(data);
+        this.content = data.content; 
         this.open();
         return this.container;
-    }
-}
-
-interface FormState {
-    valid: boolean;
-    errors: string[];
-}
-
-export class Form<T> extends View<FormState> {
-    private submitButton: HTMLButtonElement;
-    private errorDisplay: HTMLElement;
-
-    constructor(events: EventEmitter, private formContainer: HTMLFormElement) {
-        super(events, formContainer);
-
-        this.submitButton = ensureElement<HTMLButtonElement>('button[type=submit]', this.formContainer);
-        this.errorDisplay = ensureElement<HTMLElement>('.form_errors', this.formContainer);
-
-        this.setupEventListeners();
-    }
-
-    protected getElement<T extends HTMLElement>(name: string): T | null {
-        return this.formContainer.elements.namedItem(name) as T;
-    }
-
-    private setupEventListeners(): void {
-        this.formContainer.addEventListener('input', this.handleInputChange.bind(this));
-        this.formContainer.addEventListener('submit', this.handleSubmit.bind(this));
-    }
-
-    private handleInputChange(event: Event): void {
-        const target = event.target as HTMLInputElement;
-        const fieldName = target.name as keyof T;
-        const fieldValue = target.value;
-
-        this.emitFieldChange(fieldName, fieldValue);
-    }
-
-    private handleSubmit(event: Event): void {
-        event.preventDefault();
-        this.events.emit(`${this.formContainer.name}:submit`);
-    }
-
-    private emitFieldChange(field: keyof T, value: string): void {
-        this.events.emit(`${this.formContainer.name}.${String(field)}:change`, { field, value });
-    }
-
-    set valid(state: boolean) {
-        this.submitButton.disabled = !state;
-    }
-
-    set errors(errorMessages: string[]) {
-        this.updateErrorDisplay(errorMessages);
-    }
-
-    protected onInputChange(field: keyof T, value: string): void {
-        this.events.emit(`${this.formContainer.name}.${String(field)}:change`, { field, value });
-    }
-
-    private updateErrorDisplay(errors: string[]): void {
-        if (errors.length > 0) {
-            this.errorDisplay.innerHTML = errors.join('<br/>');
-        } else {
-            this.errorDisplay.innerHTML = '';
-        }
-    }
-
-    render(state: Partial<T> & FormState): HTMLElement {
-        const { valid, errors, ...inputValues } = state;
-
-        super.render({ valid, errors: errors ?? [] });
-        Object.assign(this, inputValues);
-
-        return this.formContainer;
     }
 }
