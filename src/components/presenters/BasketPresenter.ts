@@ -2,7 +2,7 @@ import { View } from "./MainPresenter";
 import { ensureElement, cloneTemplate } from "../../utils/utils";
 import { EventEmitter } from "../../components/base/events";
 
-interface IBasketView {
+interface BasketView {
     items: HTMLElement[];
     total: number;
 }
@@ -15,7 +15,7 @@ function createElement<T extends HTMLElement>(tag: string, attributes?: Partial<
     return element;
 }
 
-export class Basket extends View<IBasketView> {
+export class Basket extends View<BasketView> {
     static template = ensureElement<HTMLTemplateElement>('#basket');
 
     protected _list: HTMLElement;
