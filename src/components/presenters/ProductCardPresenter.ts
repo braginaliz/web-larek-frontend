@@ -1,12 +1,12 @@
-import { bem, ensureElement } from "../../utils/utils";
-import ProductModel from "../models/ProductModel";
+// ProductCardPresenter.ts
+import { ensureElement } from "../../utils/utils";
 import { IEvents, EventEmitter } from "../base/events";
 
 interface CardActions {
     onClick: (event: MouseEvent) => void;
 }
 
-export class ProductCard {
+export class ProductCardPresenter {
     protected titleElement: HTMLElement;
     protected imageElement: HTMLImageElement;
     protected priceElement: HTMLElement;

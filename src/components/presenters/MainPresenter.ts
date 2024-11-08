@@ -1,3 +1,4 @@
+// MainPresenter.ts
 import { IEvents } from "../base/events";
 
 export class MainPresenter<T> {
@@ -32,12 +33,14 @@ export class View<T> extends MainPresenter<T> {
     constructor(protected readonly events: IEvents, container: HTMLElement) {
         super(container);
     }
+
     updateBasketCount(count: number): void {
         const basketCounter = this.container.querySelector('.header__basket-counter');
         if (basketCounter) {
             this.setText(basketCounter as HTMLElement, count);
         }
     }
+
     showOrderSuccess(amount: number): void {
         const successTemplate = document.getElementById('success')?.innerHTML;
         if (successTemplate) {

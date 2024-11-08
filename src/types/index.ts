@@ -1,7 +1,6 @@
-// Типы для способов оплаты
+// types.ts
 export type PaymentTypes = 'cash' | 'card';
 
-// Интерфейс, описывающий структуру товара
 export interface ProductDetails {
     id: string;                  // уникальный идентификатор товара
     name: string;                // наименование товара
@@ -11,7 +10,6 @@ export interface ProductDetails {
     image: string;               // URL изображения товара
 }
 
-// Интерфейс заказа
 export interface OrderDetails {
     paymentMethod: PaymentTypes; // способ оплаты
     customerEmail: string;       // email клиента
@@ -21,7 +19,6 @@ export interface OrderDetails {
     orderedItems: string[];      // идентификаторы заказанных товаров
 }
 
-// Интерфейс для описания корзины покупок
 export interface ShoppingBasket {
     items: string[];             // список идентификаторов товаров
     totalPrice: number;          // общая стоимость всех товаров
@@ -29,8 +26,8 @@ export interface ShoppingBasket {
 
 export type OrderInput = Omit<OrderDetails, 'totalAmount' | 'orderedItems'>;
 
-// Интерфейс для результата обработки заказа
 export interface OrderOutcome {
     orderId: string;             // идентификатор заказа
-    finalAmount: number;         // итоговая сумма
+    finalAmount: number; 
+    paymentMethod: PaymentTypes; // итоговая сумма
 }

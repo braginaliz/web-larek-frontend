@@ -1,3 +1,4 @@
+// ModalPresenter.ts
 import { View } from "./MainPresenter";
 import { EventEmitter, IEvents } from "../../components/base/events";
 import { ensureElement } from "../../utils/utils";
@@ -26,7 +27,7 @@ export class Modal extends View<ModalData> {
     }
 
     set contentValue(value: HTMLElement) {
-        this.content.replaceChildren(value);  
+        this.content.replaceChildren(value);
     }
 
     open(): void {
@@ -37,16 +38,16 @@ export class Modal extends View<ModalData> {
     close(): void {
         this.container.classList.remove('modal_active');
         this.events.emit('modal:close');
-        this.clearContent(); 
+        this.clearContent();
     }
-    
+
     private clearContent(): void {
-        this.content.innerHTML = ''; 
+        this.content.innerHTML = '';
     }
 
     render(data: ModalData): HTMLElement {
-        this.contentValue = data.content;  
-        this.open(); 
+        this.contentValue = data.content;
+        this.open();
         return this.container;
     }
 }
@@ -67,6 +68,10 @@ export class Form<T> extends View<FormState> {
         this.errorDisplay = ensureElement<HTMLElement>('.form_errors', this.formContainer);
 
         this.setupEventListeners();
+    }
+
+    protected getElement<T extends HTMLElement>(name: string): T | null {
+        return this.formContainer.elements.namedItem(name) as T;
     }
 
     private setupEventListeners(): void {
@@ -99,18 +104,22 @@ export class Form<T> extends View<FormState> {
         this.updateErrorDisplay(errorMessages);
     }
 
+    protected onInputChange(field: keyof T, value: string): void {
+        this.events.emit(`${this.formContainer.name}.${String(field)}:change`, { field, value });
+    }
+
     private updateErrorDisplay(errors: string[]): void {
         if (errors.length > 0) {
-            this.errorDisplay.innerHTML = errors.join('<br/>');  
+            this.errorDisplay.innerHTML = errors.join('<br/>');
         } else {
-            this.errorDisplay.innerHTML = '';  
+            this.errorDisplay.innerHTML = '';
         }
     }
 
     render(state: Partial<T> & FormState): HTMLElement {
         const { valid, errors, ...inputValues } = state;
 
-        super.render({ valid, errors: errors ? errors : [] }); 
+        super.render({ valid, errors: errors ?? [] });
         Object.assign(this, inputValues);
 
         return this.formContainer;
