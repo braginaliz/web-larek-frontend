@@ -39,4 +39,8 @@ export class BasketViewer extends View<BasketViewerInter> {
             this._button.setAttribute('disabled', 'disabled');
         }
     }
+
+    set total(total: number) {
+        this.setText(this._total, `${total}`);
+    }
 }

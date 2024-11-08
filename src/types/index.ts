@@ -1,4 +1,3 @@
-// types.ts
 export type PaymentTypes = 'cash' | 'card';
 
 export interface ProductDetails {
@@ -11,17 +10,17 @@ export interface ProductDetails {
 }
 
 export interface OrderDetails {
-    payment: PaymentTypes; // способ оплаты
-    email: string;       // email клиента
-    phone: string;       // телефон клиента
-    address: string;     // адрес доставки
-    total: number;         // общая сумма заказа
-    items: string[];      // идентификаторы заказанных товаров
+    payment: PaymentTypes;       // способ оплаты
+    email: string;               // email клиента
+    phone: string;               // телефон клиента
+    address: string;             // адрес доставки
+    total: number;               // общая сумма заказа
+    items: string[];             // идентификаторы заказанных товаров
 }
 
 export interface ShoppingBasket {
     items: string[];             // список идентификаторов товаров
-    total: number;          // общая стоимость всех товаров
+    total: number;               // общая стоимость всех товаров
 }
 
 export type OrderInput = Omit<OrderDetails, 'total' | 'items'> & {
@@ -30,6 +29,8 @@ export type OrderInput = Omit<OrderDetails, 'total' | 'items'> & {
 };
 
 export interface OrderOutcome {
-    id: string;             // идентификатор заказа
-    total: number; 
+    id: string;                  // идентификатор заказа
+    total: number;               // общая сумма заказа
 }
+
+
