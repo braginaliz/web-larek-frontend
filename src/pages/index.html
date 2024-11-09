@@ -124,19 +124,20 @@
 		<div class="modal__container">
 			<button class="modal__close" aria-label="закрыть"></button>
 			<div class="modal__content">
-				<form class="form">
+				<form class="form" name="contacts">
 					<div class="order">
 						<label class="order__field">
 							<span class="form__label modal__title">Email</span>
-							<input class="form__input" type="text" placeholder="Введите Email" />
+							<input name="email" class="form__input" type="text" placeholder="Введите Email" required />
 						</label>
 						<label class="order__field">
 							<span class="form__label modal__title">Телефон</span>
-							<input class="form__input" type="text" placeholder="+7 (" />
+							<input name="phone" class="form__input" type="text" placeholder="+7 " required />
 						</label>
 					</div>
 					<div class="modal__actions">
-						<button disabled class="button">Оплатить</button>
+						<button type="submit" disabled class="button">Оплатить</button>
+						<span class="form__errors"></span>
 					</div>
 				</form>
 			</div>

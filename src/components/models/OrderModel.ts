@@ -47,7 +47,7 @@ class OrderModel {
         if (!this.order.address) {
             errors.address = 'Необходимо указать адрес';
         }
-
+ 
         this.formErrors = errors;
         this.events.emit('formErrors:change', errors);
         return Object.keys(errors).length === 0;
@@ -74,6 +74,8 @@ class OrderModel {
     getOrder() {
         return this.order;
     }
+ 
+     
 }
 
 export default OrderModel;

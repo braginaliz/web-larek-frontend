@@ -107,15 +107,22 @@ events.on('contactsFormErrors:change', (errors: Partial<OrderInput>) => {
 
 
 
-  // Запрос на создание заказа
-  api.createOrder(orderModel.getOrder())
-    .then((res) => {
-      events.emit('order:success', res);
-      basketModel.clearBasket();
-      page.counter = 0;
-    })
-    .catch(console.error);
-;
+   // Проверка валидности заказа перед отправкой
+   if (orderModel.getOrder().email === '' || orderModel.getOrder().phone === '' || orderModel.getOrder().address === '') {
+    orderDetails.errors = 'Необходимо заполнить все обязательные поля.';
+    orderDetails.valid = false;
+}
+
+api.createOrder(orderModel.getOrder())
+.then((res) => {
+    events.emit('order:success', res);
+    basketModel.clearBasket();
+    page.counter = 0;
+})
+.catch(err => {
+    console.error(err);
+    orderDetails.errors = 'Произошла ошибка при создании заказа.';
+});
 
 // Успешное завершение покупки
 events.on('order:success', (res: ApiListResponse<string>) => {
