@@ -15,7 +15,7 @@ export class FormPresenter<T extends FormDeclare> extends View<T> {
     constructor(events: EventEmitter, protected container: HTMLFormElement) {
         super(events, container);
         this._submit = ensureElement<HTMLButtonElement>('button[type=submit]', this.container);
-        this._errors = ensureElement<HTMLElement>('.form_errors', this.container);
+        this._errors = ensureElement<HTMLElement>('.form__errors', this.container);
 
         this.container.addEventListener('input', this.handleInput.bind(this));
         this.container.addEventListener('submit', this.handleSubmit.bind(this));

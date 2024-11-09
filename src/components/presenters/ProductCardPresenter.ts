@@ -20,12 +20,12 @@ export class ProductCardPresenter extends MainPresenter<ProductDetails> {
     constructor(container: HTMLElement, actions?: ICardActions) { 
         super(container);
 
-        this._title = ensureElement<HTMLElement>('.card_title', container);
-        this._price = ensureElement<HTMLElement>('.card_price', container);
-        this._category = container.querySelector<HTMLElement>('.card_category');
-        this._button = container.querySelector<HTMLButtonElement>('.card_button'); 
-        this._image = container.querySelector<HTMLImageElement>('.card_image'); 
-        this._description = container.querySelector<HTMLElement>('.card_description');
+        this._title = ensureElement<HTMLElement>('.card__title', container);
+        this._price = ensureElement<HTMLElement>('.card__price', container);
+        this._category = container.querySelector<HTMLElement>('.card__category');
+        this._button = container.querySelector<HTMLButtonElement>('.card__button'); 
+        this._image = container.querySelector<HTMLImageElement>('.card__image'); 
+        this._description = container.querySelector<HTMLElement>('.card__description');
 
         if (actions?.onClick) {
             this._button 

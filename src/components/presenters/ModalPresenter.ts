@@ -13,8 +13,8 @@ export class ModalPresenter extends View<ModalDeclare> {
 
     constructor(events: IEvents, container: HTMLElement) {
         super(events, container);
-        this._closeButton = ensureElement<HTMLButtonElement>('.modal_close', container);
-        this._content = ensureElement<HTMLElement>('.modal_content', container);
+        this._closeButton = ensureElement<HTMLButtonElement>('.modal__close', container);
+        this._content = ensureElement<HTMLElement>('.modal__content', container);
 
         this._closeButton.addEventListener('click', this.close.bind(this));
         this.container.addEventListener('click', this.close.bind(this));

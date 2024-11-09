@@ -19,9 +19,9 @@ export class BasketViewer extends View<BasketViewerInter> {
     constructor(events: EventEmitter) {
         super(events, cloneTemplate(BasketViewer.template));
         
-        this._list = ensureElement<HTMLElement>('.basket_list', this.container);
-        this._total = ensureElement<HTMLElement>('.basket_price', this.container);
-        this._button = ensureElement<HTMLElement>('.basket_button', this.container);
+        this._list = ensureElement<HTMLElement>('.basket__list', this.container);
+        this._total = ensureElement<HTMLElement>('.basket__price', this.container);
+        this._button = ensureElement<HTMLElement>('.basket__button', this.container);
 
         this._button.addEventListener('click', () => {
             events.emit('order:open');
