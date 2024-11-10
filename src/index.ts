@@ -144,13 +144,10 @@ events.on('preview:change', (item: InterProduct | null) => {
 
         card.button = appData.inBasket(item) ? 'Удалить из корзины' : 'В корзину';
         
-        // Установить уникальное описание товара
-        card.description = item.description; // теперь каждый товар будет иметь своё описание
-
-        // Изменяем DOM элемент для отображения уникального описания
+        card.description = item.description; 
         const productDescriptionElement = document.getElementById('product-description');
         if (productDescriptionElement) {
-            productDescriptionElement.textContent = item.description; // Подставляем описание конкретного товара
+            productDescriptionElement.textContent = item.description; 
         }
 
         modal.render({
