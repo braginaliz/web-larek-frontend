@@ -10,7 +10,7 @@ import { AppData } from './components/AppData';
 import { Page } from './components/Page';
 import { ShoppingBasket } from './components/common/ShoppingBasket';
 import { Success } from './components/common/Succes';
-import { ThisForm } from './components/Order';
+import { Order } from './components/Order';
 import { Contact } from './components/Contact';
 
 const api = new LarekAPI(CDN_URL, API_URL);
@@ -24,7 +24,7 @@ const appData = new AppData(events);
 const modal = new Modal(events, ensureElement<HTMLElement>('#modal-container'));
 const page = new Page(document.body, events);
 const basket = new ShoppingBasket(events);
-const orderForm = new ThisForm(events, cloneTemplate(ensureElement<HTMLTemplateElement>('#order')));
+const orderForm = new Order(events, cloneTemplate(ensureElement<HTMLTemplateElement>('#order')));
 const contactsForm = new Contact(events, cloneTemplate(ensureElement<HTMLTemplateElement>('#contacts')));
 
 // Event handlers
@@ -47,16 +47,19 @@ events.on('contacts:submit', () => {
         });
 });
 
+// Оформить заказ
 events.on('order:open', () => {
     modal.render({
-        content: orderForm.render({
-            payment: 'card',
-            address: '',
-            valid: false,
-            errors: [] // Ensure this is always an array of strings
-        })
+      content: orderForm.render(
+        {
+            payment:'card',
+          address: '',
+          valid: false,
+          errors: []
+        }
+      ),
     });
-});
+  });
 
 events.on('order:submit', () => {
     modal.render({
@@ -64,28 +67,28 @@ events.on('order:submit', () => {
             email: '',
             phone: '',
             valid: false,
-            errors: [] // Ensuring it's an array of strings
+            errors: [] 
         })
     });
 });
 
 events.on('order:ready', (order: InterOrder) => {
-    contactsForm.valid = true; // Ensure this meets the boolean requirement
+    contactsForm.valid = true; 
 });
 
-events.on('order:*:change', (data: { field: keyof OrderForm; value: string }) => {
+events.on(/^order\..*:change/, (data: { field: keyof OrderForm; value: string }) => {
     appData.setOrderField(data.field, data.value);
 });
 
-events.on('contacts:*:change', (data: { field: keyof OrderForm; value: string }) => {
+events.on(/^contacts\..*:change/, (data: { field: keyof OrderForm; value: string }) => {
     appData.setOrderField(data.field, data.value);
 });
 
-events.on('formErrors', (errors: Partial<OrderForm>) => {
+events.on('formErrors:change', (errors: Partial<OrderForm>) => {
     const { payment, address, email, phone } = errors;
-    orderForm.valid = !!(payment && address); // Ensure a boolean value
-    orderForm.errors = Object.values(payment ?? {}).filter(i => !!i).join('; ');
-    contactsForm.errors = Object.values(email ?? {}).concat(Object.values(phone ?? {})).filter(i => !!i).join('; ');
+    orderForm.valid = !payment && !address; 
+    orderForm.errors = Object.values({payment,address}).filter(i => !!i).join('; ');
+    contactsForm.errors = Object.values({email,phone}).filter(i => !!i).join('; ');
 });
 
 events.on('basket:open', () => {
@@ -119,7 +122,7 @@ events.on('basket:change', () => {
     page.counter = appData.basket.items.length;
 
     basket.items = appData.basket.items.map(id => {
-        const item = appData.basket.items.find(item => item.id === id);
+        const item = appData.items.find(item => item.id === id);
         const card = new ProductCard(cloneTemplate(cardBasketTemplate), {
             onClick: () => appData.removeFromBasket(item!)
         });
@@ -153,7 +156,6 @@ events.on('preview:change', (item: InterProduct | null) => {
     }
 });
 
-// Fetch product list and handle potential errors
 api.getProductList()
     .then(appData.setItems.bind(appData))
     .catch(err => {

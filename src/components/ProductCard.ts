@@ -18,12 +18,12 @@ export class ProductCard extends MainComponent<InterProduct> {
 
     constructor(container: HTMLElement, actions?: ICardActions) {
         super(container);
-        this._title = ensureElement<HTMLElement>('.card_title', container);
-        this._price = ensureElement<HTMLElement>('.card_price', container);
-        this._category = container.querySelector('.card_category');
-        this._button = container.querySelector('.card_button');
-        this._image = container.querySelector('.card_image');
-        this._description = container.querySelector('.card_description');
+        this._title = ensureElement<HTMLElement>('.card__title', container);
+        this._price = ensureElement<HTMLElement>('.card__price', container);
+        this._category = container.querySelector('.card__category');
+        this._button = container.querySelector('.card__button');
+        this._image = container.querySelector('.card__image');
+        this._description = container.querySelector('.card__description');
 
         if (actions?.onClick) {
             if (this._button) {

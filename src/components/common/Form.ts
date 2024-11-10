@@ -4,7 +4,7 @@ import {ensureElement} from '../../utils/utils';
 
 interface InterFormState {
     valid: boolean;
-    errors: string;
+    errors: string[];
 }
 
 export class Form<T> extends View<InterFormState> {
@@ -15,7 +15,7 @@ export class Form<T> extends View<InterFormState> {
         super(events, container);
 
         this._submit = ensureElement<HTMLButtonElement>('button[type=submit]', this.container);
-        this._errors = ensureElement<HTMLElement>('.form_errors', this.container);
+        this._errors = ensureElement<HTMLElement>('.form__errors', this.container);
 
         this.container.addEventListener('input', (e: Event) => {
             const target = e.target as HTMLInputElement;

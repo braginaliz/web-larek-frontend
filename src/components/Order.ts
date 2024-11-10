@@ -3,7 +3,7 @@ import { OrderForm, PaymentMethod } from "../types";
 import { EventEmitter } from  "./base/events";
 import { ensureElement } from "../utils/utils";
 
-export class ThisForm extends Form<OrderForm> {
+export class Order extends Form<OrderForm> {
     protected _paymentCard: HTMLButtonElement;
     protected _paymentCash: HTMLButtonElement;
 
