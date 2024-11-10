@@ -33,7 +33,23 @@ export class ProductCard extends MainComponent<InterProduct> {
             }
         }
     }
-
+    protected categoryColors: Record<string, string> = {
+        "софт-скил": 'soft', 
+        "другое": 'other', 
+        "кнопка": 'button', 
+        "хард-скил": 'hard', 
+        "дополнительное": 'additional' 
+    };
+    
+    set category(value: string) { 
+        this.setText(this._category, value); 
+    
+        // Ensure proper class assignment based on the category
+        if (this._category) { 
+            const categoryClass = this.categoryColors[value] || '';
+            this._category.className = `card__category card__category_${categoryClass}`; 
+        } 
+    }
     toggle(modifier: CardModifier) {
         this.toggleClass(bem('card', undefined, modifier).name);
     }
@@ -59,10 +75,6 @@ export class ProductCard extends MainComponent<InterProduct> {
         if (this._button) {
             this._button.disabled = !value;
         }
-    }
-    
-    set category(value: string) {
-        this.setText(this._category, value);
     }
     
     set image(value: string) {

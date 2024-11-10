@@ -1,3 +1,4 @@
+
 import { IEvents } from './events';
 
 export class MainComponent<T> {

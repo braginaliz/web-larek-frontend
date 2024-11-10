@@ -1,3 +1,4 @@
+//index.ts
 import './scss/styles.scss';
 import { LarekAPI } from './components/common/LarekAPI';
 import { API_URL, CDN_URL } from './utils/constants';
@@ -173,4 +174,31 @@ events.on('items:change', (items: InterProduct[]) => {
         });
         return card.render(item);
     });
+});
+
+events.on('preview:change', (item: InterProduct | null) => { 
+    if (item) {
+        const card = new ProductCard(cloneTemplate(cardPreviewTemplate), {
+            onClick: () => {
+                if (appData.inBasket(item)) {
+                    appData.removeFromBasket(item);
+                    card.button = 'В корзину';
+                } else {
+                    appData.addToBasket(item);
+                    card.button = 'Удалить из корзины';
+                }
+            }
+        });
+
+        card.button = appData.inBasket(item) ? 'Удалить из корзины' : 'В корзину';
+        
+        // Set the correct description here
+        card.description = item.description;
+
+        modal.render({
+            content: card.render(item)
+        });
+    } else {
+        modal.close();
+    }
 });
