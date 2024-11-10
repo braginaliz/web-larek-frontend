@@ -143,6 +143,15 @@ events.on('preview:change', (item: InterProduct | null) => {
         });
 
         card.button = appData.inBasket(item) ? 'Удалить из корзины' : 'В корзину';
+        
+        // Установить уникальное описание товара
+        card.description = item.description; // теперь каждый товар будет иметь своё описание
+
+        // Изменяем DOM элемент для отображения уникального описания
+        const productDescriptionElement = document.getElementById('product-description');
+        if (productDescriptionElement) {
+            productDescriptionElement.textContent = item.description; // Подставляем описание конкретного товара
+        }
 
         modal.render({
             content: card.render(item)
@@ -176,29 +185,3 @@ events.on('items:change', (items: InterProduct[]) => {
     });
 });
 
-events.on('preview:change', (item: InterProduct | null) => { 
-    if (item) {
-        const card = new ProductCard(cloneTemplate(cardPreviewTemplate), {
-            onClick: () => {
-                if (appData.inBasket(item)) {
-                    appData.removeFromBasket(item);
-                    card.button = 'В корзину';
-                } else {
-                    appData.addToBasket(item);
-                    card.button = 'Удалить из корзины';
-                }
-            }
-        });
-
-        card.button = appData.inBasket(item) ? 'Удалить из корзины' : 'В корзину';
-        
-        // Set the correct description here
-        card.description = item.description;
-
-        modal.render({
-            content: card.render(item)
-        });
-    } else {
-        modal.close();
-    }
-});

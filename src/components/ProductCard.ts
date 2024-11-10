@@ -1,4 +1,4 @@
-import {MainComponent} from "./base/MainComponent";
+import { MainComponent } from "./base/MainComponent";
 import { InterProduct } from "../types";
 import { bem, ensureElement } from "../utils/utils";
 
@@ -33,6 +33,7 @@ export class ProductCard extends MainComponent<InterProduct> {
             }
         }
     }
+
     protected categoryColors: Record<string, string> = {
         "софт-скил": 'soft', 
         "другое": 'other', 
@@ -40,7 +41,7 @@ export class ProductCard extends MainComponent<InterProduct> {
         "хард-скил": 'hard', 
         "дополнительное": 'additional' 
     };
-    
+
     set category(value: string) { 
         this.setText(this._category, value); 
     
@@ -50,14 +51,15 @@ export class ProductCard extends MainComponent<InterProduct> {
             this._category.className = `card__category card__category_${categoryClass}`; 
         } 
     }
+
     toggle(modifier: CardModifier) {
         this.toggleClass(bem('card', undefined, modifier).name);
     }
-    
+
     set id(value: string) {
         this.container.dataset.id = value;
     }
-    
+
     get id(): string {
         return this.container.dataset.id || '';
     }
@@ -71,7 +73,7 @@ export class ProductCard extends MainComponent<InterProduct> {
     }
     
     set price(value: number) {
-        this.setText(this._price, value ? `${value} синопсов` : 'Бесплатно');
+        this.setText(this._price, value ? `${value} cинапсов` : 'Бесплатно');
         if (this._button) {
             this._button.disabled = !value;
         }
