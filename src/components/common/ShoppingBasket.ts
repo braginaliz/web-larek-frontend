@@ -3,7 +3,7 @@ import { cloneTemplate, createElement, ensureElement } from "../../utils/utils";
 import { EventEmitter } from "../base/events";
 
 interface InterBasketView {
-    items: HTMLElement;
+    items: HTMLElement[];
     total: number;
 }
 
@@ -34,12 +34,19 @@ export class ShoppingBasket extends View<InterBasketView> {
             this._button.removeAttribute('disabled');
         } else {
             this._list.replaceChildren(createElement<HTMLParagraphElement>('p', {
-                    textContent: 'Корзина пуста',
-                })
-            );
+                textContent: 'Корзина пуста',
+            }));
             this._button.setAttribute('disabled', 'disabled');
         }
+
+        this._list.querySelectorAll('.basket__item').forEach((item, index) => {
+            const indexElement = item.querySelector('.basket__item-index');
+            if (indexElement) {
+                indexElement.textContent = (index + 1).toString();
+            }
+        });
     }
+
     set total(total: number) {
         this.setText(this._total, `${total} синансов`);
     }
