@@ -1,4 +1,3 @@
-//index.ts
 import './scss/styles.scss';
 import { LarekAPI } from './components/common/LarekAPI';
 import { API_URL, CDN_URL } from './utils/constants';
@@ -13,7 +12,6 @@ import { ShoppingBasket } from './components/common/ShoppingBasket';
 import { Success } from './components/common/Succes';
 import { Order } from './components/Order';
 import { Contact } from './components/Contact';
-
 
 const api = new LarekAPI(CDN_URL, API_URL);
 
@@ -37,16 +35,15 @@ api.getProductList()
         console.error(err);
     });
 
-
-
 // Order отправка
 events.on('contacts:submit', () => {
     api.orderProducts(appData.order)
         .then((result) => {
+            appData.clearBasket(); 
+            
             const success = new Success(cloneTemplate(ensureElement<HTMLTemplateElement>('#success')), {
                 onClick: () => {
                     modal.close();
-                    appData.clearBasket();
                 }
             });
 
@@ -59,7 +56,7 @@ events.on('contacts:submit', () => {
         });
 });
 
-//Заказ
+// Заказ
 events.on('order:open', () => {
     modal.render({
         content: orderForm.render({
@@ -123,7 +120,6 @@ events.on('basket:change', () => {
         return card.render(item!);
     });
 
-
     basket.total = appData.basket.total;
 });
 
@@ -158,7 +154,6 @@ events.on('preview:change', (item: InterProduct | null) => {
     }
 });
 
-
 events.on('modal:open', () => {
     page.locked = true;
 });
@@ -166,7 +161,6 @@ events.on('modal:open', () => {
 events.on('modal:close', () => {
     page.locked = false;
 });
-
 
 events.on('card:select', (item: InterProduct) => {
     appData.setPreview(item);
@@ -181,4 +175,3 @@ events.on('items:change', (items: InterProduct[]) => {
         return card.render(item);
     });
 });
-
